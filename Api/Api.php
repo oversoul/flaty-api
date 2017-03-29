@@ -61,17 +61,21 @@ class Api
 
 	/**
 	 * Api response as json.
+	 * render response or return 404 not found.
 	 * @return string
 	 */
 	function response() {
 		$data = $this->app->page->header();
 		$data['content'] = $this->app->page->content();
 
+		$response = new Response;
+
 		if (array_get($data, 'layout') == '404')
 		{
-			$this->notFound();
+			$data = ['error' => 'page not found', 'status' => 404];
+			$response->status(404);
 		}
-		$response = new Response;
+
 		$response->header('Content-Type', 'application/json')
 				->content(json_encode($data));
 		exit($response);
